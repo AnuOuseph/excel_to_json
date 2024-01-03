@@ -1,6 +1,9 @@
 /* eslint-disable no-unused-vars */
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import ReactPaginate from 'react-paginate';
+import PaginatedItems from './Paginate';
+
 
 function App() {
   const [file, setFile] = useState(null);
@@ -50,7 +53,8 @@ function App() {
       <input type="file" accept=".xlsx" onChange={handleFileChange} />
       <button onClick={handleUpload}>Upload Excel</button>
       <p>table</p>
-      <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+      <PaginatedItems itemsPerPage={5} leads={leads}/>
+      {/* <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
           <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
           <tr>
               <th scope="col" className="px-6 py-3">
@@ -89,7 +93,7 @@ function App() {
                   </tr>
             ))}
           </tbody>
-      </table>
+      </table> */}
     </div>
   );
 }
