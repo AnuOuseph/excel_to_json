@@ -75,7 +75,7 @@ const uploadExcel = async (req, res) => {
   }
 };
 
-
+//get details of leads
 const getDetails = async (req,res)=>{
     try {
         const leads = await ExcelData.find();
