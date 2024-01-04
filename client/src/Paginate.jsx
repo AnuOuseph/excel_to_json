@@ -5,13 +5,47 @@
 import React, { useState } from 'react';
 import ReactPaginate from 'react-paginate';
 import './App.css'
+import jsPDF from 'jspdf';
+import * as XLSX from 'xlsx';
+import 'jspdf-autotable';
 
-function Items({ currentItems}) {
+
+function Items({ currentItems,leads}) {
+
+  const downloadExcel = () => {
+    const ws = XLSX.utils.json_to_sheet(leads);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+    XLSX.writeFile(wb, 'table.xlsx');
+  };
+  const downloadPDF = (selectedKeys) => {
+    const pdf = new jsPDF();
+    const filteredData = leads.map(item =>
+      selectedKeys.reduce((acc, key) => {
+        acc[key] = item[key];
+        return acc;
+      }, {})
+    );
+    const columns = selectedKeys;
+    const rows = filteredData.map(item => selectedKeys.map(key => item[key]));
+    pdf.autoTable({
+      head: [columns],
+      startY: 20,
+    });
+    pdf.autoTable({
+      head: [],
+      body: rows,
+      startY: 30,
+    });
+    pdf.save('data.pdf');
+  };
   return (
     <>
         {currentItems &&(
         <div>
             <h3>Item</h3>
+            <button onClick={downloadExcel}>Download Excel</button>
+            <button onClick={() => downloadPDF(['name', 'number', 'country','email'])}>Download PDF</button>
             <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                 <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                     <tr>
