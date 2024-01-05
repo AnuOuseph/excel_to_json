@@ -78,8 +78,24 @@ const uploadExcel = async (req, res) => {
 //get details of leads
 const getDetails = async (req,res)=>{
     try {
-        const leads = await ExcelData.find();
-        res.status(201).json({ success: true, leads });
+      const searchQuery = req.query.query;
+      if (searchQuery !== null && searchQuery !== undefined) {
+        // Implement your MongoDB query for searching
+        const leads = await ExcelData.find({
+          $or: [
+            { name: { $regex: new RegExp(searchQuery, 'i') } },
+            { email: { $regex: new RegExp(searchQuery, 'i') } },
+            { country: { $regex: new RegExp(searchQuery, 'i') } },
+          ],
+        });
+        console.log(leads)
+        res.json({success: true, leads: leads });
+      } else {
+        // Fetch all documents if searchQuery is not provided
+        const allLeads = await ExcelData.find();
+        console.log(allLeads)
+        res.json({ success: true,leads: allLeads });
+      }
     } catch(error) {
         res.status(500).json({ success: false, message: 'Error retrieving leads', error: error.message });
     }

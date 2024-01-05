@@ -10,7 +10,7 @@ import * as XLSX from 'xlsx';
 import 'jspdf-autotable';
 
 
-function Items({ currentItems,leads}) {
+function Items({ currentItems,leads,searchQuery,setSearchQuery}) {
 
   const downloadExcel = () => {
     const ws = XLSX.utils.json_to_sheet(leads);
@@ -43,9 +43,11 @@ function Items({ currentItems,leads}) {
     <>
         {currentItems &&(
         <div>
-            <h3>Item</h3>
+            <h3 className='py-2'>Data</h3>
             <button onClick={downloadExcel}>Download Excel</button>
             <button onClick={() => downloadPDF(['name', 'number', 'country','email'])}>Download PDF</button>
+            <input type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className='border border-gray-500 px-2 rounded-sm text-sm py-1' placeholder='Search' />
+            <button>Filter</button>
             <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                 <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                     <tr>
@@ -80,7 +82,7 @@ function Items({ currentItems,leads}) {
   );
 }
 
-function PaginatedItems({ itemsPerPage ,leads}) {
+function PaginatedItems({ itemsPerPage ,leads,searchQuery,setSearchQuery}) {
   const [itemOffset, setItemOffset] = useState(0);
   const endOffset = itemOffset + itemsPerPage;
   const currentItems = leads.slice(itemOffset, endOffset);
@@ -92,7 +94,7 @@ function PaginatedItems({ itemsPerPage ,leads}) {
 
   return (
     <>
-      <Items currentItems={currentItems} leads={leads}/>
+      <Items currentItems={currentItems} leads={leads} searchQuery={searchQuery} setSearchQuery={setSearchQuery}/>
       <ReactPaginate
         nextLabel="next >"
         onPageChange={handlePageClick}

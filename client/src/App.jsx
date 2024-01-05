@@ -5,6 +5,7 @@ import PaginatedItems from './Paginate';
 
 function App() {
   const [file, setFile] = useState(null);
+  const [searchQuery, setSearchQuery] = useState('');
   const [leads,setLeads] = useState([])
 
   const handleFileChange = (e) => {
@@ -29,7 +30,7 @@ function App() {
     formData.append('file', file);
 
     try {
-      const response = await fetch('http://localhost:3001/api/excel/upload', {
+      const response = await fetch(`http://localhost:3001/api/excel/upload?query=${searchQuery}`, {
         method: 'POST',
         body: formData,
       });
@@ -51,7 +52,7 @@ function App() {
         <input type="file" accept=".xlsx" onChange={handleFileChange} />
         <button onClick={handleUpload}>Upload Excel</button>
       </div>
-      <PaginatedItems itemsPerPage={5} leads={leads}/>
+      <PaginatedItems itemsPerPage={5} leads={leads} searchQuery={searchQuery} setSearchQuery={setSearchQuery}/>
     </div>
   );
 }
