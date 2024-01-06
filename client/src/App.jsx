@@ -15,7 +15,7 @@ function App() {
 
   useEffect(() => {
     const apiPromises = [
-      axios.get("http://localhost:3001/api/excel/getDetails"),
+      axios.get(`http://localhost:3001/api/excel/getDetails?query=${searchQuery}`),
     ];
     Promise.all(apiPromises).then((responses) => {
       const [
@@ -23,14 +23,14 @@ function App() {
       ] = responses;
       setLeads(leadsData?.data?.leads);
     });
-  }, []);
+  }, [searchQuery]);
 
   const handleUpload = async () => {
     const formData = new FormData();
     formData.append('file', file);
 
     try {
-      const response = await fetch(`http://localhost:3001/api/excel/upload?query=${searchQuery}`, {
+      const response = await fetch("http://localhost:3001/api/excel/upload", {
         method: 'POST',
         body: formData,
       });
